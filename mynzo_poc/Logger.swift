@@ -23,7 +23,7 @@ let kLogsDirectory = "TestingLogsData"
     guard let writePath = NSURL(fileURLWithPath: path).appendingPathComponent(folder) else { return }
     //print(writePath.absoluteString)
     let file = writePath.appendingPathComponent(fileNamed + ".txt")
-    
+      UserDefaults.standard.set("\(file)", forKey: "filePath")
     if let fileHandle = FileHandle(forWritingAtPath: file.path) {
       fileHandle.seekToEndOfFile()
       fileHandle.write(textToBeAppended.data(using: .utf8)!)

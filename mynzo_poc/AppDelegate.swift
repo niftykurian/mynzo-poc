@@ -21,6 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        if UserDefaults.standard.bool(forKey: "firstTime") == false{
+            UserDefaults.standard.set(true, forKey: "firstTime")
+            UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
+        }
         Logger.write(text: "application launched after final update")
         application.registerForRemoteNotifications()
         locationManager.delegate = self
@@ -28,6 +32,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.startMonitoringSignificantLocationChanges()
         getactivitytracking()
+        
+        
+        if (launchOptions != nil) {
+                // Launched from push notification
+                NSDictionary *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+
+           }
         return true
     }
     
@@ -55,6 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         if CMMotionActivityManager.isActivityAvailable() {
             activityManager.startActivityUpdates(to: OperationQueue.main) { (activity: CMMotionActivity?) in
                 if let activity = activity {
+                    Logger.write(text:"sync date updated in start activity tracking method")
                     UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
                     let confidence = activity.confidence.rawValue
                     // Handle the activity here
@@ -87,40 +99,44 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // Start a background task
+        Logger.write(text:"remote notification")
         let backgroundTask = application.beginBackgroundTask(withName: "MyBackgroundTask", expirationHandler: {
             // Handle the expiration of the background task
             completionHandler(.failed)
+            Logger.write(text:"expiration handler data")
+            self.getactivitytracking()
         })
         self.getactivitytracking()
         // Perform your task here
         DispatchQueue.main.asyncAfter(deadline: .now() + 180) {
             // End the background task
-            
+
             application.endBackgroundTask(backgroundTask)
             completionHandler(.newData)
         }
     }
     
     func getactivitytracking(){
-        if let _ = UserDefaults.standard.object(forKey: "syncDate") {
-            Logger.write(text:"retrieved data")
-            activityManager.queryActivityStarting(from: Date(timeIntervalSince1970: UserDefaults.standard.double(forKey: "syncDate")),
-                                                  to: Date(),
-                                                  to: OperationQueue.main) { (motionActivities, error) in
-                for activity in motionActivities! {
-                    if activity.walking {
-                        Logger.write(text:"User is walking, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
-                    } else if activity.running {
-                        Logger.write(text:"User is running, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
-                    } else if activity.automotive {
-                        Logger.write(text:"User is in a vehicle, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
-                    } else if activity.stationary {
-                        Logger.write(text:"User is stationary, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
-                    } else if activity.unknown {
-                        Logger.write(text:"unknown")
-                    }
+        Logger.write(text:"retrieved data")
+        Logger.write(text:"requesting data from \(Date(timeIntervalSince1970: UserDefaults.standard.double(forKey: "syncDate"))) to \(Date())")
+        activityManager.queryActivityStarting(from: Date(timeIntervalSince1970: UserDefaults.standard.double(forKey: "syncDate")),
+                                              to: Date(),
+                                              to: OperationQueue.main) { (motionActivities, error) in
+            for activity in motionActivities! {
+                if activity.walking {
+                    Logger.write(text:"User is walking, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
+                } else if activity.running {
+                    Logger.write(text:"User is running, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
+                } else if activity.automotive {
+                    Logger.write(text:"User is in a vehicle, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
+                } else if activity.stationary {
+                    Logger.write(text:"User is stationary, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
+                } else if activity.unknown {
+                    Logger.write(text:"unknown")
                 }
             }
+            Logger.write(text:"sync date updated in getactivity tracking method")
+            UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
             self.startTracking()
         }
     }
