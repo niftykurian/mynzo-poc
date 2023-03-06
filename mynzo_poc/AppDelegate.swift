@@ -85,9 +85,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         }
     }
     
-//    func stopTracking() {
-//        activityManager.stopActivityUpdates()
-//    }
+    func stopTracking() {
+        activityManager.stopActivityUpdates()
+    }
     
     func didReceiveMemoryWarning() {
         didReceiveMemoryWarning()
