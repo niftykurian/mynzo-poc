@@ -21,17 +21,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        Logger.write(text: "keys \(launchOptions?.keys)")
         if let keys = launchOptions?.keys {
            if keys.contains(.location) {
+            Logger.write(text: "inside location key loop")
               locationManager.delegate = self
-              locationManager.startMonitoringVisits()
+//              locationManager.startMonitoringVisits()
            }
         }
         if UserDefaults.standard.bool(forKey: "firstTime") == false{
             UserDefaults.standard.set(true, forKey: "firstTime")
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
         }
-        Logger.write(text: "application launched after final update - 12:42 pm - 6 march")
+        Logger.write(text: "application launched after final update - 12:50 pm - 6 march")
         application.registerForRemoteNotifications()
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
