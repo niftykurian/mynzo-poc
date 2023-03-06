@@ -16,16 +16,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     let activityManager = CMMotionActivityManager()
     let motionManager = CMMotionManager()
     let queue = OperationQueue()
-    var backgroundTask: UIBackgroundTaskIdentifier = .invalid
+//    var backgroundTask: UIBackgroundTaskIdentifier = .invalid
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        if let keys = launchOptions?.keys {
+           if keys.contains(.location) {
+              locationManager.delegate = self
+              locationManager.startMonitoringVisits()
+           }
+        }
         if UserDefaults.standard.bool(forKey: "firstTime") == false{
             UserDefaults.standard.set(true, forKey: "firstTime")
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
         }
-        Logger.write(text: "application launched after final update - 11:22 am - 6 march")
+        Logger.write(text: "application launched after final update - 12:42 pm - 6 march")
         application.registerForRemoteNotifications()
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
@@ -74,20 +80,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                         Logger.write(text:"User is stationary, confidence: \(confidence) at \(activity.startDate.toString())")
                     } else if activity.unknown {
                         Logger.write(text:"unknown")
-                    }else{
-                        Logger.write(text:"in else condition")
-                        Logger.write(text:"\(activity)")
-                        Logger.write(text:"\(activity.description)")
-                        Logger.write(text:"\(activity.debugDescription)")
                     }
+//                    else{
+//                        Logger.write(text:"in else condition")
+//                        Logger.write(text:"\(activity)")
+//                        Logger.write(text:"\(activity.description)")
+//                        Logger.write(text:"\(activity.debugDescription)")
+//                    }
                 }
             }
         }
     }
     
-    func stopTracking() {
-        activityManager.stopActivityUpdates()
-    }
+//    func stopTracking() {
+//        activityManager.stopActivityUpdates()
+//        locationManager.stopMonitoringSignificantLocationChanges()
+//    }
     
     func didReceiveMemoryWarning() {
         didReceiveMemoryWarning()
@@ -96,24 +104,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        // Start a background task
-        Logger.write(text:"remote notification")
-        let backgroundTask = application.beginBackgroundTask(withName: "MyBackgroundTask", expirationHandler: {
-            // Handle the expiration of the background task
-            completionHandler(.failed)
-            Logger.write(text:"expiration handler data")
-            self.getactivitytracking()
-        })
-        self.getactivitytracking()
-        // Perform your task here
-        DispatchQueue.main.asyncAfter(deadline: .now() + 180) {
-            // End the background task
-
-            application.endBackgroundTask(backgroundTask)
-            completionHandler(.newData)
-        }
-    }
+//    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+//        // Start a background task
+//        Logger.write(text:"remote notification")
+//        let backgroundTask = application.beginBackgroundTask(withName: "MyBackgroundTask", expirationHandler: {
+//            // Handle the expiration of the background task
+//            completionHandler(.failed)
+//            Logger.write(text:"expiration handler data")
+//            self.getactivitytracking()
+//        })
+//        self.getactivitytracking()
+//        // Perform your task here
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 180) {
+//            // End the background task
+//
+//            application.endBackgroundTask(backgroundTask)
+//            completionHandler(.newData)
+//        }
+//    }
     
     func getactivitytracking(){
         Logger.write(text:"retrieved data")
@@ -132,12 +140,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     Logger.write(text:"User is stationary, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
                 } else if activity.unknown {
                     Logger.write(text:"unknown")
-                }else{
-                    Logger.write(text:"in else condition")
-                    Logger.write(text:"\(activity)")
-                    Logger.write(text:"\(activity.description)")
-                    Logger.write(text:"\(activity.debugDescription)")
                 }
+//                else{
+//                    Logger.write(text:"in else condition")
+//                    Logger.write(text:"\(activity)")
+//                    Logger.write(text:"\(activity.description)")
+//                    Logger.write(text:"\(activity.debugDescription)")
+//                }
             }
             Logger.write(text:"sync date updated in getactivity tracking method")
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
