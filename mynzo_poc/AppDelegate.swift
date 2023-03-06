@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             UserDefaults.standard.set(true, forKey: "firstTime")
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
         }
-        Logger.write(text: "application launched after final update")
+        Logger.write(text: "application launched after final update - 11:22 am - 6 march")
         application.registerForRemoteNotifications()
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
@@ -52,6 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         Logger.write(text: ("Latitude: \(location.coordinate.latitude) , Longitude: \(location.coordinate.longitude)"))
+        getactivitytracking()
         // Use the location here
     }
     
@@ -73,15 +74,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                         Logger.write(text:"User is stationary, confidence: \(confidence) at \(activity.startDate.toString())")
                     } else if activity.unknown {
                         Logger.write(text:"unknown")
+                    }else{
+                        Logger.write(text:"in else condition")
+                        Logger.write(text:"\(activity)")
+                        Logger.write(text:"\(activity.description)")
+                        Logger.write(text:"\(activity.debugDescription)")
                     }
                 }
             }
         }
     }
     
-    func stopTracking() {
-        activityManager.stopActivityUpdates()
-    }
+//    func stopTracking() {
+//        activityManager.stopActivityUpdates()
+//    }
     
     func didReceiveMemoryWarning() {
         didReceiveMemoryWarning()
@@ -126,12 +132,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     Logger.write(text:"User is stationary, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
                 } else if activity.unknown {
                     Logger.write(text:"unknown")
+                }else{
+                    Logger.write(text:"in else condition")
+                    Logger.write(text:"\(activity)")
+                    Logger.write(text:"\(activity.description)")
+                    Logger.write(text:"\(activity.debugDescription)")
                 }
             }
             Logger.write(text:"sync date updated in getactivity tracking method")
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
             self.startTracking()
         }
+    }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        activityManager.stopActivityUpdates()
     }
 }
 
