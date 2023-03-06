@@ -21,19 +21,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        Logger.write(text: "keys \(launchOptions?.keys)")
-        if let keys = launchOptions?.keys {
-           if keys.contains(.location) {
-            Logger.write(text: "inside location key loop")
-              locationManager.delegate = self
-//              locationManager.startMonitoringVisits()
-           }
-        }
+//        Logger.write(text: "keys \(launchOptions?.keys)")
+//        if let keys = launchOptions?.keys {
+//           if keys.contains(.location) {
+//            Logger.write(text: "inside location key loop")
+//              locationManager.delegate = self
+////              locationManager.startMonitoringVisits()
+//           }
+//        }
         if UserDefaults.standard.bool(forKey: "firstTime") == false{
             UserDefaults.standard.set(true, forKey: "firstTime")
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
         }
-        Logger.write(text: "application launched after final update - 12:50 pm - 6 march")
+//        Logger.write(text: "application launched after final update - 12:50 pm - 6 march")
         application.registerForRemoteNotifications()
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
@@ -60,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         Logger.write(text: ("Latitude: \(location.coordinate.latitude) , Longitude: \(location.coordinate.longitude)"))
-        getactivitytracking()
+//        getactivitytracking()
         // Use the location here
     }
     
@@ -83,12 +83,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     } else if activity.unknown {
                         Logger.write(text:"unknown")
                     }
-//                    else{
+                    else{
 //                        Logger.write(text:"in else condition")
 //                        Logger.write(text:"\(activity)")
-//                        Logger.write(text:"\(activity.description)")
-//                        Logger.write(text:"\(activity.debugDescription)")
-//                    }
+                        Logger.write(text:"\(activity.description)")
+
+                    }
                 }
             }
         }
@@ -126,8 +126,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
 //    }
     
     func getactivitytracking(){
-        Logger.write(text:"retrieved data")
-        Logger.write(text:"requesting data from \(Date(timeIntervalSince1970: UserDefaults.standard.double(forKey: "syncDate"))) to \(Date())")
+//        Logger.write(text:"retrieved data")
+//        Logger.write(text:"requesting data from \(Date(timeIntervalSince1970: UserDefaults.standard.double(forKey: "syncDate"))) to \(Date())")
         activityManager.queryActivityStarting(from: Date(timeIntervalSince1970: UserDefaults.standard.double(forKey: "syncDate")),
                                               to: Date(),
                                               to: OperationQueue.main) { (motionActivities, error) in
@@ -143,21 +143,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 } else if activity.unknown {
                     Logger.write(text:"unknown")
                 }
-//                else{
-//                    Logger.write(text:"in else condition")
-//                    Logger.write(text:"\(activity)")
-//                    Logger.write(text:"\(activity.description)")
-//                    Logger.write(text:"\(activity.debugDescription)")
-//                }
+                else{
+                    Logger.write(text:"\(activity.description)")
+                }
             }
-            Logger.write(text:"sync date updated in getactivity tracking method")
+//            Logger.write(text:"sync date updated in getactivity tracking method")
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
             self.startTracking()
         }
     }
     
-    func applicationWillTerminate(_ application: UIApplication) {
-        activityManager.stopActivityUpdates()
-    }
+//    func applicationWillTerminate(_ application: UIApplication) {
+//        activityManager.stopActivityUpdates()
+//    }
 }
 
