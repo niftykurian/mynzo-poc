@@ -17,50 +17,80 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     let motionManager = CMMotionManager()
     let queue = OperationQueue()
     var backgroundTask: UIBackgroundTaskIdentifier = .invalid
-    
+    var window:UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         if UserDefaults.standard.bool(forKey: "firstTime") == false{
             UserDefaults.standard.set(true, forKey: "firstTime")
-            UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
+            UserDefaults.standard.set(Date(), forKey: "syncDate")
+            Logger.write(text: "first time date setup - \(Date())")
         }
-        Logger.write(text: "application launched after final update")
-        application.registerForRemoteNotifications()
-        locationManager.delegate = self
-        locationManager.requestAlwaysAuthorization()
-        locationManager.allowsBackgroundLocationUpdates = true
-        locationManager.startMonitoringSignificantLocationChanges()
+        Logger.write(text: "launched first time  - 10:1pm")
+        Logger.write(text: "keys \(launchOptions?.keys)")
+        _registerRemoteNotification()
+        if let keys = launchOptions?.keys {
+            if keys.contains(.location) {
+                Logger.write(text: "Application launched by location event")
+                _initLocationManager()
+                locationManager.startMonitoringSignificantLocationChanges()
+            }
+        }
+        else{
+            Logger.write(text: "Application Launched")
+            _initLocationManager()
+            locationManager.distanceFilter = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+        }
         getactivitytracking()
         return true
     }
     
-    // MARK: UISceneSession Lifecycle
     
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        // Called when a new scene session is being created.
-        // Use this method to select a configuration to create the new scene with.
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    func applicationWillResignActive(_ application: UIApplication) {
+        Logger.write(text: ("will resign active"))
+        locationManager.stopUpdatingLocation()
+        locationManager.stopMonitoringSignificantLocationChanges()
+        locationManager.startMonitoringSignificantLocationChanges()
     }
-    
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-        // Called when the user discards a scene session.
-        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        Logger.write(text: ("will enter foreground"))
+        getactivitytracking()
     }
-    
+   
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         Logger.write(text: ("Latitude: \(location.coordinate.latitude) , Longitude: \(location.coordinate.longitude)"))
+        getactivitytracking()
         // Use the location here
+    }
+    func _registerRemoteNotification(){
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if let error = error {
+                print("Error requesting notification authorization: \(error.localizedDescription)")
+                return
+            }
+            if granted {
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+            }
+        }
+    }
+    func _initLocationManager(){
+        locationManager.delegate = self
+        locationManager.requestAlwaysAuthorization()
+        locationManager.allowsBackgroundLocationUpdates = true
+        locationManager.pausesLocationUpdatesAutomatically = false
     }
     
     func startTracking() {
         if CMMotionActivityManager.isActivityAvailable() {
             activityManager.startActivityUpdates(to: OperationQueue.main) { (activity: CMMotionActivity?) in
                 if let activity = activity {
-                    Logger.write(text:"sync date updated in start activity tracking method")
-                    UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
+                    Logger.write(text:"sync date updated in start activity tracking method with \(Date())")
+                    UserDefaults.standard.set(Date(), forKey: "syncDate")
+                    Logger.write(text:"value in nsuserdefaults \(UserDefaults.standard.object(forKey: "syncDate"))")
                     let confidence = activity.confidence.rawValue
                     // Handle the activity here
                     if activity.walking {
@@ -73,12 +103,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                         Logger.write(text:"User is stationary, confidence: \(confidence) at \(activity.startDate.toString())")
                     } else if activity.unknown {
                         Logger.write(text:"unknown")
+                    }else{
+                        Logger.write(text: "else activity - \(activity.description)")
                     }
                 }
             }
         }
     }
-    
+
     func stopTracking() {
         activityManager.stopActivityUpdates()
     }
@@ -91,8 +123,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        Logger.write(text:"remote notification received")
         // Start a background task
-        Logger.write(text:"remote notification")
         let backgroundTask = application.beginBackgroundTask(withName: "MyBackgroundTask", expirationHandler: {
             // Handle the expiration of the background task
             completionHandler(.failed)
@@ -103,7 +135,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         // Perform your task here
         DispatchQueue.main.asyncAfter(deadline: .now() + 180) {
             // End the background task
-
             application.endBackgroundTask(backgroundTask)
             completionHandler(.newData)
         }
@@ -111,8 +142,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     func getactivitytracking(){
         Logger.write(text:"retrieved data")
-        Logger.write(text:"requesting data from \(Date(timeIntervalSince1970: UserDefaults.standard.double(forKey: "syncDate"))) to \(Date())")
-        activityManager.queryActivityStarting(from: Date(timeIntervalSince1970: UserDefaults.standard.double(forKey: "syncDate")),
+        Logger.write(text:"requesting data from \(UserDefaults.standard.object(forKey: "syncDate") as! Date) to \(Date())")
+        activityManager.queryActivityStarting(from:  UserDefaults.standard.object(forKey: "syncDate") as! Date,
                                               to: Date(),
                                               to: OperationQueue.main) { (motionActivities, error) in
             for activity in motionActivities! {
@@ -128,8 +159,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     Logger.write(text:"unknown")
                 }
             }
-            Logger.write(text:"sync date updated in getactivity tracking method")
-            UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
+            Logger.write(text:"sync date updated in getactivity tracking method with \(Date())")
+            UserDefaults.standard.set(Date(), forKey: "syncDate")
             self.startTracking()
         }
     }
