@@ -235,7 +235,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         let locValue:CLLocationCoordinate2D = manager.location!.coordinate
-        
+        startTracking()
         self.latitude = locValue.latitude
         self.longitude = locValue.longitude
         Logger.write(text: ("updated location - Latitude: \(self.latitude) , Longitude: \(self.longitude)"))
