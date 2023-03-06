@@ -33,6 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
 //        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
 //                // Handle the authorization result
 //            }
+
         if UserDefaults.standard.bool(forKey: "firstTime") == false{
             UserDefaults.standard.set(true, forKey: "firstTime")
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
@@ -64,7 +65,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         Logger.write(text: ("updated location - Latitude: \(location.coordinate.latitude) , Longitude: \(location.coordinate.longitude)"))
-        getactivitytracking()
+//        getactivitytracking()
+//        getactivitytracking()
         // Use the location here
     }
     
@@ -74,25 +76,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 if let activity = activity {
 //                    Logger.write(text:"sync date updated in start activity tracking method")
                     UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
-                    let confidence = activity.confidence.rawValue
+//                    if activity.confidence == .high || activity.confidence == .medium{
+                        Logger.write(text:"\(activity.description) at \(activity.startDate.toString())")
+//                    }
+//                    let confidence = activity.confidence.rawValue
                     // Handle the activity here
-                    if activity.walking {
-                        Logger.write(text:"User is walking, confidence: \(confidence) at \(activity.startDate.toString())")
-                    } else if activity.running {
-                        Logger.write(text:"User is running, confidence: \(confidence) at \(activity.startDate.toString())")
-                    } else if activity.automotive {
-                        Logger.write(text:"User is in a vehicle, confidence: \(confidence) at \(activity.startDate.toString())")
-                    } else if activity.stationary {
-                        Logger.write(text:"User is stationary, confidence: \(confidence) at \(activity.startDate.toString())")
-                    } else if activity.unknown {
-                        Logger.write(text:"unknown")
-                    }
-                    else{
-//                        Logger.write(text:"in else condition")
-//                        Logger.write(text:"\(activity)")
-                        Logger.write(text:"\(activity.description)")
-
-                    }
+//                    if activity.walking {
+//                        Logger.write(text:"User is walking, confidence: \(confidence) at \(activity.startDate.toString())")
+//                    } else if activity.running {
+//                        Logger.write(text:"User is running, confidence: \(confidence) at \(activity.startDate.toString())")
+//                    } else if activity.automotive {
+//                        Logger.write(text:"User is in a vehicle, confidence: \(confidence) at \(activity.startDate.toString())")
+//                    } else if activity.stationary {
+//                        Logger.write(text:"User is stationary, confidence: \(confidence) at \(activity.startDate.toString())")
+//                    } else if activity.unknown {
+//                        Logger.write(text:"unknown")
+//                    }
+//                    else{
+////                        Logger.write(text:"in else condition")
+////                        Logger.write(text:"\(activity)")
+//                        Logger.write(text:"\(activity.description)")
+//
+//                    }
                 }
             }
         }
@@ -136,23 +141,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         activityManager.queryActivityStarting(from: Date(timeIntervalSince1970: UserDefaults.standard.double(forKey: "syncDate")),
                                               to: Date(),
                                               to: OperationQueue.main) { (motionActivities, error) in
+            Logger.write(text:"\(motionActivities?.count ?? 0) activities detected")
             for activity in motionActivities! {
-                if activity.walking {
-                    Logger.write(text:"User is walking, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
-                } else if activity.running {
-                    Logger.write(text:"User is running, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
-                } else if activity.automotive {
-                    Logger.write(text:"User is in a vehicle, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
-                } else if activity.stationary {
-                    Logger.write(text:"User is stationary, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
-                } else if activity.unknown {
-                    Logger.write(text:"unknown")
-                }else if let error = error {
-                    Logger.write(text:"error: \(error)")
-                }
-                else{
-                    Logger.write(text:"\(activity.description)")
-                }
+//                if activity.confidence == .high || activity.confidence == .medium{
+                    Logger.write(text:"\(activity.description) at \(activity.startDate.toString())")
+//                }
+//                if activity.walking {
+//                    Logger.write(text:"User is walking, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
+//                } else if activity.running {
+//                    Logger.write(text:"User is running, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
+//                } else if activity.automotive {
+//                    Logger.write(text:"User is in a vehicle, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
+//                } else if activity.stationary {
+//                    Logger.write(text:"User is stationary, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
+//                } else if activity.unknown {
+//                    Logger.write(text:"unknown")
+//                }else if let error = error {
+//                    Logger.write(text:"error: \(error)")
+//                }
+//                else{
+//                    Logger.write(text:"\(activity.description)")
+//                }
             }
             //            Logger.write(text:"sync date updated in getactivity tracking method")
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
