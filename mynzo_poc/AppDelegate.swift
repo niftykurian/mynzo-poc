@@ -32,13 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.startMonitoringSignificantLocationChanges()
         getactivitytracking()
-        
-        
-        if (launchOptions != nil) {
-                // Launched from push notification
-                NSDictionary *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-
-           }
         return true
     }
     
