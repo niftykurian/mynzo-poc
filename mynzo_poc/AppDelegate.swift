@@ -28,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        Logger.write(text: "<<<<<<<<application launched after final update 7 March >>>>>>>>>>>>>")
         // Override point for customization after application launch.
         //        Logger.write(text: "keys \(launchOptions?.keys)")
         //        if let keys = launchOptions?.keys {
@@ -224,7 +225,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         locationManager.distanceFilter = kCLDistanceFilterNone
         locationManager.requestAlwaysAuthorization()
         locationManager.allowsBackgroundLocationUpdates = true
-        locationManager.pausesLocationUpdatesAutomatically = false
+        locationManager.pausesLocationUpdatesAutomatically = true
         locationManager.startUpdatingLocation()
     }
     

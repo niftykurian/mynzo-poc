@@ -460,8 +460,9 @@
 				DEVELOPMENT_TEAM = GS528Q8583;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = mynzo_poc/Info.plist;
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Inroder to track your data";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Inroder to track your data - when in usage";
+				INFOPLIST_KEY_CFBundleDisplayName = "Mynzo poc with pause";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "to get your location";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "to get your location";
 				INFOPLIST_KEY_NSMotionUsageDescription = "inorder to track activity";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -474,7 +475,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "keyvalue.mynzo-poc";
+				PRODUCT_BUNDLE_IDENTIFIER = "keyvalue.mynzo-poc-pause";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -492,8 +493,9 @@
 				DEVELOPMENT_TEAM = GS528Q8583;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = mynzo_poc/Info.plist;
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Inroder to track your data";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Inroder to track your data - when in usage";
+				INFOPLIST_KEY_CFBundleDisplayName = "Mynzo poc with pause";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "to get your location";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "to get your location";
 				INFOPLIST_KEY_NSMotionUsageDescription = "inorder to track activity";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -506,7 +508,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "keyvalue.mynzo-poc";
+				PRODUCT_BUNDLE_IDENTIFIER = "keyvalue.mynzo-poc-pause";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
