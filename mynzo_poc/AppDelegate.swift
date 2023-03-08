@@ -27,7 +27,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     var current_time = NSDate().timeIntervalSince1970
     
     
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
         // Override point for customization after application launch.
         //        Logger.write(text: "keys \(launchOptions?.keys)")
         //        if let keys = launchOptions?.keys {
@@ -46,40 +48,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             UserDefaults.standard.set(true, forKey: "firstTime")
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
         }
-        //        Logger.write(text: "application launched after final update - 12:50 pm - 6 march")
         application.registerForRemoteNotifications()
-      
-
-        
-        
-        
-        StartupdateLocation()
-        getactivitytracking()
+        if(AppDelegate.hasGivenAllPermissions()){
+            StartupdateLocation()
+            getactivitytracking()
+        }else{
+            
+            AppDelegate.askForRemainingPermissions()
+            
+            
+        }
         return true
+        
     }
     
-    // MARK: UISceneSession Lifecycle
-    
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        // Called when a new scene session is being created.
-        // Use this method to select a configuration to create the new scene with.
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
-    }
-    
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-        // Called when the user discards a scene session.
-        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
-    }
-//
-//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        guard let location = locations.last else { return }
-//        Logger.write(text: ("updated location - Latitude: \(location.coordinate.latitude) , Longitude: \(location.coordinate.longitude)"))
-//        //        getactivitytracking()
-//        //        getactivitytracking()
-//        // Use the location here
-//    }
-//
     func startTracking() {
         if CMMotionActivityManager.isActivityAvailable() {
             activityManager.startActivityUpdates(to: OperationQueue.main) { (activity: CMMotionActivity?) in
@@ -123,6 +105,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         Logger.write(text:"memory warning")
         // Dispose of any resources that can be recreated.
     }
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        AppDelegate.askForRemainingPermissions()
+    }
     
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -152,33 +137,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                                                   to: Date(),
                                                   to: OperationQueue.main) { (motionActivities, error) in
                 Logger.write(text:"\(motionActivities?.count ?? 0) activities detected")
-                for activity in motionActivities! {
-                    //                if activity.confidence == .high || activity.confidence == .medium{
-                    Logger.write(text:"\(activity.description) at \(activity.startDate.toString())")
-                    //                }
-                    //                if activity.walking {
-                    //                    Logger.write(text:"User is walking, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
-                    //                } else if activity.running {
-                    //                    Logger.write(text:"User is running, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
-                    //                } else if activity.automotive {
-                    //                    Logger.write(text:"User is in a vehicle, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
-                    //                } else if activity.stationary {
-                    //                    Logger.write(text:"User is stationary, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
-                    //                } else if activity.unknown {
-                    //                    Logger.write(text:"unknown")
-                    //                }else if let error = error {
-                    //                    Logger.write(text:"error: \(error)")
-                    //                }
-                    //                else{
-                    //                    Logger.write(text:"\(activity.description)")
-                    //                }
+                if(motionActivities != nil){
+                    for activity in motionActivities! {
+                        //                if activity.confidence == .high || activity.confidence == .medium{
+                        Logger.write(text:"\(activity.description) at \(activity.startDate.toString())")
+                        //                }
+                        //                if activity.walking {
+                        //                    Logger.write(text:"User is walking, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
+                        //                } else if activity.running {
+                        //                    Logger.write(text:"User is running, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
+                        //                } else if activity.automotive {
+                        //                    Logger.write(text:"User is in a vehicle, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
+                        //                } else if activity.stationary {
+                        //                    Logger.write(text:"User is stationary, confidence: \(activity.confidence.rawValue) at \(activity.startDate.toString())")
+                        //                } else if activity.unknown {
+                        //                    Logger.write(text:"unknown")
+                        //                }else if let error = error {
+                        //                    Logger.write(text:"error: \(error)")
+                        //                }
+                        //                else{
+                        //                    Logger.write(text:"\(activity.description)")
+                        //                }
+                    }
+                    UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
+                    
                 }
+                
                 //            Logger.write(text:"sync date updated in getactivity tracking method")
-                UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "syncDate")
             }
             self.startTracking()
         }
     }
+    
     
     func applicationWillTerminate(_ application: UIApplication) {
         locationManager.startMonitoringSignificantLocationChanges()
@@ -186,6 +176,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
+        guard AppDelegate.hasGivenAllPermissions() else { return }
         print("Entering Backround")
         self.doBackgroundTask()
     }
@@ -231,6 +222,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Error while requesting new coordinates")
     }
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager)  {
+        if manager.authorizationStatus == .authorizedAlways { return }
+        
+        AppDelegate.askForRemainingPermissions()
+    }
+    
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
@@ -239,7 +236,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         self.latitude = locValue.latitude
         self.longitude = locValue.longitude
         Logger.write(text: ("updated location - Latitude: \(self.latitude) , Longitude: \(self.longitude)"))
-       
+        
     }
     
     @objc func bgtimer(_ timer:Timer!){
@@ -252,4 +249,73 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
 }
-
+extension AppDelegate{
+    func hasLocationPermission() -> Bool {
+        guard CLLocationManager.locationServicesEnabled() else {
+            AlertManager.shared.showLocationServiceDisabled()
+            return false
+        }
+        
+        let authorizationStatus: CLAuthorizationStatus?
+        if #available(iOS 14, *) {
+            authorizationStatus = locationManager.authorizationStatus
+        } else {
+            authorizationStatus = CLLocationManager.authorizationStatus()
+        }
+        
+        switch authorizationStatus {
+        case .authorizedAlways:
+            return true
+        default:
+            return false
+        }
+    }
+    
+    func asklocationPermission() async -> Bool {
+        guard !hasLocationPermission() else { return true }
+        
+        let authorizationStatus: CLAuthorizationStatus?
+        if #available(iOS 14, *) {
+            authorizationStatus = locationManager.authorizationStatus
+        } else {
+            authorizationStatus = CLLocationManager.authorizationStatus()
+        }
+        
+        switch authorizationStatus {
+        case .restricted, .denied,.notDetermined,.none:
+            AlertManager.shared.showLocationDenied()
+            return false
+        case .authorizedWhenInUse:
+            AlertManager.shared.showBackgroundLocationDisabled()
+            return false
+        case .authorizedAlways:
+            return true
+        default:
+            locationManager.requestWhenInUseAuthorization()
+            return false
+        }
+    }
+    static func hasGivenAllPermissions() -> Bool {
+        let authorisationResult = SensorManager.shared.hasGivenAllPermissions()
+        if case .success() = authorisationResult {
+            return true
+        } else {
+            return false
+        }
+    }
+    static func askForRemainingPermissions() {
+        let authorisationResult = SensorManager.shared.hasGivenAllPermissions()
+        if case .success() = authorisationResult {
+            //        handleActivitiesWhenAppBecomeActive()
+            return
+        } else {
+            //        SensorManager.shared.stopSensors()
+            Task{
+                await SensorManager.shared.askForRemainingPermission()
+                
+            }
+        }
+        
+        
+    }
+}
