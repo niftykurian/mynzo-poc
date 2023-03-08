@@ -16,8 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     let activityManager = CMMotionActivityManager()
     let motionManager = CMMotionManager()
     let queue = OperationQueue()
-    
-    
     var window: UIWindow?
     var locationManager = CLLocationManager()
     var backgroundUpdateTask: UIBackgroundTaskIdentifier!
@@ -53,10 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             StartupdateLocation()
             getactivitytracking()
         }else{
-            
             AppDelegate.askForRemainingPermissions()
-            
-            
         }
         return true
         
@@ -306,10 +301,9 @@ extension AppDelegate{
     static func askForRemainingPermissions() {
         let authorisationResult = SensorManager.shared.hasGivenAllPermissions()
         if case .success() = authorisationResult {
-            //        handleActivitiesWhenAppBecomeActive()
+           //restart location manager
             return
         } else {
-            //        SensorManager.shared.stopSensors()
             Task{
                 await SensorManager.shared.askForRemainingPermission()
                 
