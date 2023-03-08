@@ -51,7 +51,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             StartupdateLocation()
             getactivitytracking()
         }else{
-            AppDelegate.askForRemainingPermissions()
+            locationManager.requestWhenInUseAuthorization()
+            AppDelegate.checkAllPermissions()
         }
         return true
         
@@ -100,8 +101,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         Logger.write(text:"memory warning")
         // Dispose of any resources that can be recreated.
     }
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        AppDelegate.askForRemainingPermissions()
+    func applicationDidBecomeActive(_ application: UIApplication) { AppDelegate.checkAllPermissions()
     }
     
     
@@ -171,6 +171,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
+        //        locationManager.requestWhenInUseAuthorization()
         guard AppDelegate.hasGivenAllPermissions() else { return }
         print("Entering Backround")
         self.doBackgroundTask()
@@ -219,8 +220,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager)  {
         if manager.authorizationStatus == .authorizedAlways { return }
-        
-        AppDelegate.askForRemainingPermissions()
+        AppDelegate.checkAllPermissions()
+        return
     }
     
     
@@ -277,7 +278,7 @@ extension AppDelegate{
         }
         
         switch authorizationStatus {
-        case .restricted, .denied,.notDetermined,.none:
+        case .restricted, .denied:
             AlertManager.shared.showLocationDenied()
             return false
         case .authorizedWhenInUse:
@@ -298,18 +299,18 @@ extension AppDelegate{
             return false
         }
     }
-    static func askForRemainingPermissions() {
+    static func checkAllPermissions() {
         let authorisationResult = SensorManager.shared.hasGivenAllPermissions()
         if case .success() = authorisationResult {
-           //restart location manager
+            //restart location manager
             return
         } else {
-            Task{
+            let task = Task{
                 await SensorManager.shared.askForRemainingPermission()
-                
+                return
             }
+            task.cancel()
+            
         }
-        
-        
     }
 }

@@ -3,4 +3,69 @@
    uuid = "B5CE7290-E601-4246-97B7-31023A21865A"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "79B2C2D0-B49D-4B05-9A74-D3421BCDB707"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "mynzo_poc/AppDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "309"
+            endingLineNumber = "309"
+            landmarkName = "checkAllPermissions()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "79B2C2D0-B49D-4B05-9A74-D3421BCDB707 - 4efe988bdec60cb5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for closure #1 @Sendable () async -&gt; () in static mynzo_poc.AppDelegate.checkAllPermissions() -&gt; ()"
+                  moduleName = "mynzo_poc"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/julien/Desktop/mynzo-poc-final/mynzo-poc/mynzo_poc/AppDelegate.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "316"
+                  endingLineNumber = "316"
+                  offsetFromSymbolStart = "48">
+               </Location>
+               <Location
+                  uuid = "79B2C2D0-B49D-4B05-9A74-D3421BCDB707 - 41edcc986fea1389"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for closure #1 @Sendable () async -&gt; () in static mynzo_poc.AppDelegate.checkAllPermissions() -&gt; ()"
+                  moduleName = "mynzo_poc"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/julien/Desktop/mynzo-poc-final/mynzo-poc/mynzo_poc/AppDelegate.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "316"
+                  endingLineNumber = "316"
+                  offsetFromSymbolStart = "40">
+               </Location>
+               <Location
+                  uuid = "79B2C2D0-B49D-4B05-9A74-D3421BCDB707 - 9bb766bb6d5b49b7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for closure #1 @Sendable () async -&gt; () in static mynzo_poc.AppDelegate.checkAllPermissions() -&gt; ()"
+                  moduleName = "mynzo_poc"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/julien/Desktop/mynzo-poc-final/mynzo-poc/mynzo_poc/AppDelegate.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "316"
+                  endingLineNumber = "316"
+                  offsetFromSymbolStart = "20">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>
