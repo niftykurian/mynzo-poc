@@ -52,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             getactivitytracking()
         }else{
             locationManager.requestWhenInUseAuthorization()
-            AppDelegate.checkAllPermissions()
+            AppDelegate.checkAndAskAllPermission()
         }
         return true
         
@@ -101,7 +101,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         Logger.write(text:"memory warning")
         // Dispose of any resources that can be recreated.
     }
-    func applicationDidBecomeActive(_ application: UIApplication) { AppDelegate.checkAllPermissions()
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        if( AppDelegate.hasGivenAllPermissions()){
+            return
+        }
+        AppDelegate.checkAndAskAllPermission()
+        return
+        
     }
     
     
@@ -219,9 +225,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         print("Error while requesting new coordinates")
     }
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager)  {
-        if manager.authorizationStatus == .authorizedAlways { return }
-        AppDelegate.checkAllPermissions()
-        return
+        // Check the current authorization status
+        let authorizationStatus = manager.authorizationStatus
+        if authorizationStatus == .authorizedAlways {
+            // The user has granted permission to use location services
+            // Proceed with location-based functionality here
+            StartupdateLocation()
+            getactivitytracking()
+            return
+        } else {
+            if(AppDelegate.hasGivenAllPermissions()){
+                AppDelegate.checkAndAskAllPermission()
+                return
+            }
+            
+        }
     }
     
     
@@ -246,6 +264,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
 }
 extension AppDelegate{
+    
     func hasLocationPermission() -> Bool {
         guard CLLocationManager.locationServicesEnabled() else {
             AlertManager.shared.showLocationServiceDisabled()
@@ -268,7 +287,7 @@ extension AppDelegate{
     }
     
     func asklocationPermission() async -> Bool {
-        guard !hasLocationPermission() else { return true }
+//        guard !hasLocationPermission() else { return true }
         
         let authorizationStatus: CLAuthorizationStatus?
         if #available(iOS 14, *) {
@@ -291,6 +310,8 @@ extension AppDelegate{
             return false
         }
     }
+    
+    
     static func hasGivenAllPermissions() -> Bool {
         let authorisationResult = SensorManager.shared.hasGivenAllPermissions()
         if case .success() = authorisationResult {
@@ -299,18 +320,29 @@ extension AppDelegate{
             return false
         }
     }
-    static func checkAllPermissions() {
-        let authorisationResult = SensorManager.shared.hasGivenAllPermissions()
-        if case .success() = authorisationResult {
-            //restart location manager
-            return
-        } else {
-            let task = Task{
+    
+    
+    static func checkAndAskAllPermission() {
+        guard !hasGivenAllPermissions() else { return  }
+        do{
+            let task = Task.detached(operation: {
                 await SensorManager.shared.askForRemainingPermission()
-                return
-            }
+                try Task.checkCancellation()
+            })
             task.cancel()
-            
+        }catch{
+            return
         }
+        
+        //        task.cancel()
+        //        return
+        //        let authorisationResult = SensorManager.shared.hasGivenAllPermissions()
+        //        if case .success() = authorisationResult {
+        //            //restart location manager
+        //            return
+        //        } else {
+        //
+        
+        
     }
 }

@@ -7,64 +7,96 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "79B2C2D0-B49D-4B05-9A74-D3421BCDB707"
+            uuid = "8FA061AC-49E1-4B86-A2FF-241ACD94BAC5"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "mynzo_poc/SensorManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "askForRemainingPermission()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9136D18D-7DCB-4F99-9BD1-F89360A16C72"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "mynzo_poc/SensorManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
+            landmarkName = "askForRemainingPermission()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9136D18D-7DCB-4F99-9BD1-F89360A16C72 - 9644762fef3c593b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for mynzo_poc.SensorManager.askForRemainingPermission() async -&gt; ()"
+                  moduleName = "mynzo_poc"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/julien/Desktop/mynzo-poc-final/mynzo-poc/mynzo_poc/SensorManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "65"
+                  endingLineNumber = "65"
+                  offsetFromSymbolStart = "184">
+               </Location>
+               <Location
+                  uuid = "9136D18D-7DCB-4F99-9BD1-F89360A16C72 - 153fe614f71710aa"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for mynzo_poc.SensorManager.askForRemainingPermission() async -&gt; ()"
+                  moduleName = "mynzo_poc"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/julien/Desktop/mynzo-poc-final/mynzo-poc/mynzo_poc/SensorManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "65"
+                  endingLineNumber = "65"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  uuid = "9136D18D-7DCB-4F99-9BD1-F89360A16C72 - c2bd60ff81b91c3d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for mynzo_poc.SensorManager.askForRemainingPermission() async -&gt; ()"
+                  moduleName = "mynzo_poc"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/julien/Desktop/mynzo-poc-final/mynzo-poc/mynzo_poc/SensorManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "65"
+                  endingLineNumber = "65"
+                  offsetFromSymbolStart = "48">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BBA220D2-0CB7-44D6-9A8B-F62A972D6A91"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "mynzo_poc/AppDelegate.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "309"
-            endingLineNumber = "309"
-            landmarkName = "checkAllPermissions()"
+            startingLineNumber = "290"
+            endingLineNumber = "290"
+            landmarkName = "asklocationPermission()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "79B2C2D0-B49D-4B05-9A74-D3421BCDB707 - 4efe988bdec60cb5"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for closure #1 @Sendable () async -&gt; () in static mynzo_poc.AppDelegate.checkAllPermissions() -&gt; ()"
-                  moduleName = "mynzo_poc"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/julien/Desktop/mynzo-poc-final/mynzo-poc/mynzo_poc/AppDelegate.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "316"
-                  endingLineNumber = "316"
-                  offsetFromSymbolStart = "48">
-               </Location>
-               <Location
-                  uuid = "79B2C2D0-B49D-4B05-9A74-D3421BCDB707 - 41edcc986fea1389"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(2) await resume partial function for closure #1 @Sendable () async -&gt; () in static mynzo_poc.AppDelegate.checkAllPermissions() -&gt; ()"
-                  moduleName = "mynzo_poc"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/julien/Desktop/mynzo-poc-final/mynzo-poc/mynzo_poc/AppDelegate.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "316"
-                  endingLineNumber = "316"
-                  offsetFromSymbolStart = "40">
-               </Location>
-               <Location
-                  uuid = "79B2C2D0-B49D-4B05-9A74-D3421BCDB707 - 9bb766bb6d5b49b7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for closure #1 @Sendable () async -&gt; () in static mynzo_poc.AppDelegate.checkAllPermissions() -&gt; ()"
-                  moduleName = "mynzo_poc"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/julien/Desktop/mynzo-poc-final/mynzo-poc/mynzo_poc/AppDelegate.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "316"
-                  endingLineNumber = "316"
-                  offsetFromSymbolStart = "20">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
